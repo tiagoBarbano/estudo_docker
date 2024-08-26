@@ -5,6 +5,6 @@ COPY package*.json ./
 
 COPY . .
 
-EXPOSE 8080
+EXPOSE 3100
 
 CMD [ "npm", "start" ]

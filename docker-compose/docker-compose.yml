@@ -11,9 +11,35 @@ x-logging: &default-logging
       - regex:
           expression: '^(?P<time>\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2},d{3}) (?P<message>(?s:.*))$$'
 
-version: "3"
-
 services:
+  app:
+    build: ../app_estudo
+    ports:
+      - 3100:3100
+    restart: always
+    healthcheck:
+      test: curl --fail http://localhost:3100/health-check || exit 1
+      interval: 40s
+      timeout: 30s
+      retries: 3
+      start_period: 60s    
+    logging: *default-logging    
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.75'
+          memory: 250M
+        reservations:
+          cpus: '0.25'
+          memory: 150M
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 60s
+
   mongodb:
     image: mongo
     container_name: mongodb
@@ -26,6 +52,16 @@ services:
       - 27017:27017
     restart: "unless-stopped"
     logging: *default-logging
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.75'
+          memory: 550M
+        reservations:
+          cpus: '0.25'
+          memory: 150M
 
   redis:
     image: redis:alpine
@@ -41,6 +77,16 @@ services:
       - 5672:5672
       - 15672:15672
     logging: *default-logging
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.75'
+          memory: 550M
+        reservations:
+          cpus: '0.25'
+          memory: 150M    
 
   grafana:
     image: grafana/grafana:latest

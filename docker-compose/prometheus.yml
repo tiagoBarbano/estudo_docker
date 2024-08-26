@@ -1,0 +1,28 @@
+scrape_configs:
+  # - job_name: 'demo'
+  #   metrics_path: '/actuator/prometheus'
+  #   scrape_interval: 5s
+  #   static_configs:
+  #     - targets: ['host.docker.internal:10001']
+  # - job_name: 'app1-core'
+  #   scrape_interval: 10s
+  #   static_configs:
+  #     - targets: ['host.docker.internal:8400']      
+  # - job_name: 'app-core-calc'
+  #   scrape_interval: 10s
+  #   static_configs:
+  #     - targets: ['app-calculo-core:8000']
+  #     - targets: ['app1-calculo-core:8000']      
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['prometheus:9090']
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+  - job_name: 'manter-core'
+    static_configs:
+      - targets: ['app-manter-core:8000']
+  - job_name: node
+    static_configs:
+      - targets:
+        - node-exporter:9100
